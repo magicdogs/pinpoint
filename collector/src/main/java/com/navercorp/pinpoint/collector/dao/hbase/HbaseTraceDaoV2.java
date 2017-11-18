@@ -11,6 +11,7 @@ import com.navercorp.pinpoint.common.server.bo.serializer.trace.v2.SpanSerialize
 import com.navercorp.pinpoint.common.util.TransactionId;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.navercorp.pinpoint.common.hbase.HBaseTables.TRACE_V2;
+import static com.navercorp.pinpoint.common.hbase.HBaseTables.TRACE_V2_CF_SPAN;
 
 /**
  * @author Woonduk Kang(emeroad)
@@ -49,22 +52,29 @@ public class HbaseTraceDaoV2 implements TraceDao {
         if (spanBo == null) {
             throw new NullPointerException("spanBo must not be null");
         }
-
-
         long acceptedTime = spanBo.getCollectorAcceptTime();
-
         TransactionId transactionId = spanBo.getTransactionId();
         final byte[] rowKey = this.rowKeyEncoder.encodeRowKey(transactionId);
         final Put put = new Put(rowKey, acceptedTime);
-
         this.spanSerializer.serialize(spanBo, put, null);
-
-
         boolean success = hbaseTemplate.asyncPut(TRACE_V2, put);
         if (!success) {
             hbaseTemplate.put(TRACE_V2, put);
         }
-
+        String sXTraceId = UUID.randomUUID().toString();
+        final Put tracePut = new Put(Bytes.toBytes(sXTraceId),acceptedTime);
+        StringBuilder sBuilder = new StringBuilder();
+        sBuilder.append(transactionId.getAgentId())
+                .append("^")
+                .append(transactionId.getAgentStartTime())
+                .append("^")
+                .append(transactionId.getTransactionSequence());
+        logger.info("Add X-TRACE-ID rowKey: {}, ColumnName: {} , ColumnVal: {} ",sXTraceId,acceptedTime,sBuilder.toString());
+        tracePut.addColumn(TRACE_V2_CF_SPAN, Bytes.toBytes(acceptedTime), acceptedTime, Bytes.toBytes(sBuilder.toString()));
+        boolean successFlag = hbaseTemplate.asyncPut(TRACE_V2, tracePut);
+        if (!successFlag) {
+            hbaseTemplate.put(TRACE_V2, tracePut);
+        }
     }
 
 
