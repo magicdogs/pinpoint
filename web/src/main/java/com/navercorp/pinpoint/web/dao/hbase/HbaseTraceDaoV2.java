@@ -12,11 +12,15 @@ import com.navercorp.pinpoint.common.util.TransactionId;
 import com.navercorp.pinpoint.web.dao.TraceDao;
 import com.navercorp.pinpoint.web.mapper.CellTraceMapper;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.client.Get;
+import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.filter.BinaryPrefixComparator;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.QualifierFilter;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,4 +167,19 @@ public class HbaseTraceDaoV2 implements TraceDao {
     }
 
 
+    public List<String> selectTraceId(String traceIdParam) {
+        byte[] rowKey = Bytes.toBytes(traceIdParam);
+        return template2.get(HBaseTables.TRACE_V2, rowKey, HBaseTables.TRACE_V2_CF_SPAN, new RowMapper<List<String>>() {
+            @Override
+            public List<String> mapRow(Result row, int rowNum) throws Exception {
+                final Cell[] rawCellArrays = row.rawCells();
+                List<String> transactionIdList = new ArrayList<>(rawCellArrays.length);
+                for (Cell cell : rawCellArrays) {
+                    final String transactionId = Bytes.toString(cell.getValue());
+                    transactionIdList.add(transactionId);
+                }
+                return transactionIdList;
+            }
+        });
+    }
 }

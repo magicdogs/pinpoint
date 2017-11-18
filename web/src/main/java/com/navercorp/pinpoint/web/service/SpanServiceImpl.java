@@ -17,6 +17,7 @@
 package com.navercorp.pinpoint.web.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.navercorp.pinpoint.common.server.bo.AnnotationBo;
@@ -41,6 +42,7 @@ import com.navercorp.pinpoint.web.dao.ApiMetaDataDao;
 import com.navercorp.pinpoint.web.dao.SqlMetaDataDao;
 import com.navercorp.pinpoint.web.dao.StringMetaDataDao;
 import com.navercorp.pinpoint.web.dao.TraceDao;
+import com.navercorp.pinpoint.web.dao.hbase.HbaseTraceDaoV2;
 import com.navercorp.pinpoint.web.security.MetaDataFilter;
 import com.navercorp.pinpoint.web.security.MetaDataFilter.MetaData;
 
@@ -77,6 +79,9 @@ public class SpanServiceImpl implements SpanService {
     @Autowired
     private StringMetaDataDao stringMetaDataDao;
 
+    @Autowired
+    HbaseTraceDaoV2 hbaseTraceDaoV2;
+
     private final SqlParser sqlParser = new DefaultSqlParser();
     private final OutputParameterParser outputParameterParser = new OutputParameterParser();
 
@@ -107,6 +112,17 @@ public class SpanServiceImpl implements SpanService {
         return result;
     }
 
+    @Override
+    public List<String> selectTraceInfo(String traceIdParam) {
+        if (traceIdParam == null) {
+            throw new NullPointerException("traceId must not be null");
+        }
+        final List<String> selectTraceId = hbaseTraceDaoV2.selectTraceId(traceIdParam);
+        if (CollectionUtils.isEmpty(selectTraceId)) {
+            return Collections.emptyList();
+        }
+        return selectTraceId;
+    }
 
 
     private void transitionAnnotation(List<SpanAlign> spans, AnnotationReplacementCallback annotationReplacementCallback) {

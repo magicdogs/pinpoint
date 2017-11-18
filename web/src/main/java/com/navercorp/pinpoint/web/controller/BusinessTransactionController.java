@@ -16,14 +16,15 @@
 
 package com.navercorp.pinpoint.web.controller;
 
-import java.util.List;
-
-import com.navercorp.pinpoint.common.util.DefaultSqlParser;
-import com.navercorp.pinpoint.common.util.OutputParameterParser;
-import com.navercorp.pinpoint.common.util.SqlParser;
-import com.navercorp.pinpoint.common.util.TransactionId;
-import com.navercorp.pinpoint.common.util.TransactionIdUtils;
+import com.navercorp.pinpoint.common.util.*;
+import com.navercorp.pinpoint.web.applicationmap.ApplicationMap;
+import com.navercorp.pinpoint.web.calltree.span.CallTreeIterator;
+import com.navercorp.pinpoint.web.service.FilteredMapService;
+import com.navercorp.pinpoint.web.service.SpanResult;
+import com.navercorp.pinpoint.web.service.SpanService;
+import com.navercorp.pinpoint.web.service.TransactionInfoService;
 import com.navercorp.pinpoint.web.view.TransactionInfoViewModel;
+import com.navercorp.pinpoint.web.vo.callstacks.RecordSet;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.navercorp.pinpoint.web.applicationmap.ApplicationMap;
-import com.navercorp.pinpoint.web.calltree.span.CallTreeIterator;
-import com.navercorp.pinpoint.web.service.FilteredMapService;
-import com.navercorp.pinpoint.web.service.SpanResult;
-import com.navercorp.pinpoint.web.service.SpanService;
-import com.navercorp.pinpoint.web.service.TransactionInfoService;
-import com.navercorp.pinpoint.web.vo.callstacks.RecordSet;
+import java.util.List;
 
 /**
  * @author emeroad
@@ -75,6 +70,15 @@ public class BusinessTransactionController {
 
     private SqlParser sqlParser = new DefaultSqlParser();
     private OutputParameterParser parameterParser = new OutputParameterParser();
+
+
+    @RequestMapping(value = "findTraceInfoById" , method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> findTraceInfoById(@RequestParam("traceId") String traceIdParam){
+        logger.info("search traceIdParam : {}",traceIdParam);
+        List<String> traceList = spanService.selectTraceInfo(traceIdParam);
+        return traceList;
+    }
 
     /**
      * info lookup for a selected transaction

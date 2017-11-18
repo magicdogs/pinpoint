@@ -18,9 +18,13 @@ package com.navercorp.pinpoint.web.service;
 
 import com.navercorp.pinpoint.common.util.TransactionId;
 
+import java.util.List;
+
 /**
  * @author emeroad
  */
 public interface SpanService {
     SpanResult selectSpan(TransactionId transactionId, long selectedSpanHint);
+
+    List<String> selectTraceInfo(String traceIdParam);
 }
