@@ -39,7 +39,7 @@
     </logger>
 
     <root>
-        <level value="INFO"/>
+        <level value="DEBUG"/>
         <appender-ref ref="rollingFile"/>
     </root>
 </log4j:configuration>
