@@ -276,6 +276,9 @@ public class StandardHostValveInvokeInterceptor implements AroundInterceptor {
             recordParentInfo(recorder, request);
         }
         recorder.recordApi(SERVLET_SYNCHRONOUS_API_TAG);
+        String traceId = request.getHeader("X-TRACE-ID");
+        System.out.println("%%%%%%%%%X-TRACE-ID:  " + traceId);
+        recorder.recordTraceId(traceId);
     }
 
     private void recordParentInfo(SpanRecorder recorder, HttpServletRequest request) {

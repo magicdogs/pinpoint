@@ -49,4 +49,6 @@ public interface SpanRecorder extends FrameAttachment {
     void recordAcceptorHost(String host);
     
     void recordLogging(LoggingInfo loggingInfo);
+
+    void recordTraceId(String sss);
 }

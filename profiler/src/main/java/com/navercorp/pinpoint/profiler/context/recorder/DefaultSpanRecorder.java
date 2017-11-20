@@ -138,7 +138,12 @@ public class DefaultSpanRecorder extends AbstractRecorder implements SpanRecorde
             span.setLoggingTransactionInfo(loggingInfo.getCode()); 
         }
     }
-    
+
+    @Override
+    public void recordTraceId(String traceId) {
+        span.setTraceId(traceId);
+    }
+
     @Override
     public void recordTime(boolean time) {
         span.setTimeRecording(time);

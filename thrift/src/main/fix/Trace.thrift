@@ -102,6 +102,7 @@ struct TSpan {
   
   30: optional i16 applicationServiceType;
   31: optional byte loggingTransactionInfo;
+  32: optional string traceId;
 }
 
 struct TSpanChunk {

@@ -1984,11 +1984,11 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
     return _Fields.findByThriftId(fieldId);
   }
 
-  public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+  public void read(org.apache.thrift.protocol.TProtocol iprot) throws TException {
     schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
   }
 
-  public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+  public void write(org.apache.thrift.protocol.TProtocol oprot) throws TException {
     schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
   }
 
@@ -2178,7 +2178,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
     return sb.toString();
   }
 
-  public void validate() throws org.apache.thrift.TException {
+  public void validate() throws TException {
     // check for required fields
     // check for sub-struct validity
     if (exceptionInfo != null) {
@@ -2189,7 +2189,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
   private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
     try {
       write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-    } catch (org.apache.thrift.TException te) {
+    } catch (TException te) {
       throw new java.io.IOException(te);
     }
   }
@@ -2199,7 +2199,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
       // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
       __isset_bitfield = 0;
       read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-    } catch (org.apache.thrift.TException te) {
+    } catch (TException te) {
       throw new java.io.IOException(te);
     }
   }
@@ -2212,7 +2212,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
 
   private static class TSpanStandardScheme extends StandardScheme<TSpan> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TSpan struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, TSpan struct) throws TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -2448,7 +2448,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TSpan struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, TSpan struct) throws TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -2611,7 +2611,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
   private static class TSpanTupleScheme extends TupleScheme<TSpan> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TSpan struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, TSpan struct) throws TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       BitSet optionals = new BitSet();
       if (struct.isSetAgentId()) {
@@ -2774,7 +2774,7 @@ public class TSpan implements org.apache.thrift.TBase<TSpan, TSpan._Fields>, jav
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TSpan struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, TSpan struct) throws TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       BitSet incoming = iprot.readBitSet(24);
       if (incoming.get(0)) {
