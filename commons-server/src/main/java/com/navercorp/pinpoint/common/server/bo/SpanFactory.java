@@ -92,6 +92,8 @@ public class SpanFactory {
 
         spanBo.setLoggingTransactionInfo(tSpan.getLoggingTransactionInfo());
 
+        spanBo.setTraceId(tSpan.getTraceId());
+
         // FIXME (2015.03) Legacy - applicationServiceType added in v1.1.0
         // applicationServiceType is not saved for older versions where applicationServiceType does not exist.
         if (tSpan.isSetApplicationServiceType()) {

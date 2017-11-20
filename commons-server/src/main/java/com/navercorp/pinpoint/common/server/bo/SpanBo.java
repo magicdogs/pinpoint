@@ -70,8 +70,15 @@ public class SpanBo implements Event, BasicSpan {
 
     private byte loggingTransactionInfo; //optional
 
+    private String traceId;
 
+    public String getTraceId() {
+        return traceId;
+    }
 
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
 
     public SpanBo() {
     }

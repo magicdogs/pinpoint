@@ -77,8 +77,6 @@ public class SpanHandler implements SimpleHandler {
             if (logger.isDebugEnabled()) {
                 logger.debug("Received SPAN={}", tSpan);
             }
-
-            logger.info("$$$$$$$$$$$tSpan.getTraceId() : {}",tSpan.getTraceId());
             final SpanBo spanBo = spanFactory.buildSpanBo(tSpan);
 
             traceDao.insert(spanBo);
