@@ -70,6 +70,7 @@ public class ScatterChartController {
     private static final String PREFIX_TRANSACTION_ID = "I";
     private static final String PREFIX_TIME = "T";
     private static final String PREFIX_RESPONSE_TIME = "R";
+    private static final String MERLIN_TRACE_ID = "merlinTraceId";
 
     @Deprecated
     @RequestMapping(value = "/scatterpopup", method = RequestMethod.GET)
@@ -100,7 +101,10 @@ public class ScatterChartController {
     public TransactionMetaDataViewModel transactionmetadata(@RequestParam Map<String, String> requestParam) {
         TransactionMetaDataViewModel viewModel = new TransactionMetaDataViewModel();
         TransactionMetadataQuery query = parseSelectTransaction(requestParam);
-        if (query.size() > 0) {
+        if(StringUtils.isNotEmpty(query.getMerlinTraceId())){
+            List<SpanBo> metadata = scatter.selectTransactionByTraceId(query.getMerlinTraceId());
+            viewModel.setSpanBoList(metadata);
+        }else if (query.size() > 0) {
             List<SpanBo> metadata = scatter.selectTransactionMetadata(query);
             viewModel.setSpanBoList(metadata);
         }
@@ -122,6 +126,10 @@ public class ScatterChartController {
 
             query.addQueryCondition(transactionId, Long.parseLong(time), Integer.parseInt(responseTime));
             index++;
+        }
+        String merlinTraceId = requestParam.get(MERLIN_TRACE_ID);
+        if (null != merlinTraceId){
+            query.setMerlinTraceId(merlinTraceId);
         }
         logger.debug("query:{}", query);
         return query;

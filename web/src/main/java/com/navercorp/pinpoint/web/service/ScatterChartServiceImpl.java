@@ -51,6 +51,9 @@ public class ScatterChartServiceImpl implements ScatterChartService {
     @Qualifier("hbaseTraceDaoFactory")
     private TraceDao traceDao;
 
+    @Autowired
+    private SpanService spanService;
+
     @Override
     public List<Dot> selectScatterData(String applicationName, SelectedScatterArea area, TransactionId offsetTransactionId, int offsetTransactionElapsed, int limit) {
         if (applicationName == null) {
@@ -177,6 +180,33 @@ public class ScatterChartServiceImpl implements ScatterChartService {
         }
 
         return scatterData;
+    }
+
+    @Override
+    public List<SpanBo> selectTransactionByTraceId(String merlinTraceId) {
+        List<String> traceList = spanService.selectTraceInfo(merlinTraceId);
+        final List<TransactionId> transactionIdList = convertTransactionTarget(traceList);
+        final List<List<SpanBo>> selectedSpans = traceDao.selectSpans(transactionIdList);
+        final List<SpanBo> result = new ArrayList<>();
+        for (List<SpanBo> spans : selectedSpans) {
+            if (spans.isEmpty()) {
+            } else if (spans.size() == 1) {
+                result.add(spans.get(0));
+            }
+        }
+        return result;
+    }
+
+    private List<TransactionId> convertTransactionTarget(List<String> traceList) {
+        List<TransactionId> transactionIds = new ArrayList<>(traceList.size());
+        for (String item: traceList) {
+            String[] splitStr = item.split("\\^");
+            if(3 == splitStr.length ){
+                TransactionId transaction = new TransactionId(splitStr[0],Long.parseLong(splitStr[1]),Long.parseLong(splitStr[2]));
+                transactionIds.add(transaction);
+            }
+        }
+        return transactionIds;
     }
 
 }

@@ -65,4 +65,5 @@ public interface ScatterChartService {
 
     ScatterData selectScatterData(List<TransactionId> transactionIdList, String applicationName, Range range, int xGroupUnit, int yGroupUnit, Filter filter);
 
+    List<SpanBo> selectTransactionByTraceId(String merlinTraceId);
 }

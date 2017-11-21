@@ -29,6 +29,16 @@ public class TransactionMetadataQuery {
 
     private final List<QueryCondition> queryConditionList;
 
+    private String merlinTraceId;
+
+    public String getMerlinTraceId() {
+        return merlinTraceId;
+    }
+
+    public void setMerlinTraceId(String merlinTraceId) {
+        this.merlinTraceId = merlinTraceId;
+    }
+
     public TransactionMetadataQuery() {
         this.queryConditionList = new ArrayList<>();
     }

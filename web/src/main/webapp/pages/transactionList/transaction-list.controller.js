@@ -208,6 +208,8 @@
 	                nLastFetchedIndex++;
 	            }
 	            nFetchCount++;
+                var val = $window.opener.document.getElementById("merlinTraceId").value;
+                query = query.concat("&merlinTraceId","=",val);
 	            return query;
 	        };
 	
