@@ -64,7 +64,7 @@ public class HbaseTraceDaoV2 implements TraceDao {
         }
         logger.info("$$$$$$$$$$$ spanBo.getTraceId() : {}",spanBo.getTraceId());
         String sXTraceId = spanBo.getTraceId();
-        if(StringUtils.isEmpty(sXTraceId)){
+        if(!StringUtils.isEmpty(sXTraceId)){
             final Put tracePut = new Put(Bytes.toBytes(sXTraceId),acceptedTime);
             StringBuilder sBuilder = new StringBuilder();
             sBuilder.append(transactionId.getAgentId())
